@@ -1,0 +1,2 @@
+class PersonalWhishListProduct < ApplicationRecord
+end
