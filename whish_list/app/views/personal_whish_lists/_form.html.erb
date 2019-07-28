@@ -1,0 +1,17 @@
+<%= form_with(model: personal_whish_list, local: true) do |form| %>
+  <% if personal_whish_list.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(personal_whish_list.errors.count, "error") %> prohibited this personal_whish_list from being saved:</h2>
+
+      <ul>
+      <% personal_whish_list.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,2 @@
+module PersonalWhishListsHelper
+end
