@@ -1,0 +1,1 @@
+json.partial! "product_personal_whish_lists/product_personal_whish_list", product_personal_whish_list: @product_personal_whish_list

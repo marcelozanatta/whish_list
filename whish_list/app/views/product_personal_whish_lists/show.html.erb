@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Product:</strong>
+  <%= @product_personal_whish_list.product %>
+</p>
+
+<p>
+  <strong>Personal wish list:</strong>
+  <%= @product_personal_whish_list.personal_wish_list %>
+</p>
+
+<p>
+  <strong>Quantity:</strong>
+  <%= @product_personal_whish_list.quantity %>
+</p>
+
+<%= link_to 'Edit', edit_product_personal_whish_list_path(@product_personal_whish_list) %> |
+<%= link_to 'Back', product_personal_whish_lists_path %>
