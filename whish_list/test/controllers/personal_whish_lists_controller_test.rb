@@ -17,7 +17,7 @@ class PersonalWhishListsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create personal_whish_list" do
     assert_difference('PersonalWhishList.count') do
-      post personal_whish_lists_url, params: { personal_whish_list: {  } }
+      post personal_whish_lists_url, params: { personal_whish_list: { name: @personal_whish_list.name } }
     end
 
     assert_redirected_to personal_whish_list_url(PersonalWhishList.last)
@@ -34,7 +34,7 @@ class PersonalWhishListsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update personal_whish_list" do
-    patch personal_whish_list_url(@personal_whish_list), params: { personal_whish_list: {  } }
+    patch personal_whish_list_url(@personal_whish_list), params: { personal_whish_list: { name: @personal_whish_list.name } }
     assert_redirected_to personal_whish_list_url(@personal_whish_list)
   end
 

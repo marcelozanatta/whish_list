@@ -14,6 +14,7 @@ class PersonalWhishListsTest < ApplicationSystemTestCase
     visit personal_whish_lists_url
     click_on "New Personal Whish List"
 
+    fill_in "Name", with: @personal_whish_list.name
     click_on "Create Personal whish list"
 
     assert_text "Personal whish list was successfully created"
@@ -24,6 +25,7 @@ class PersonalWhishListsTest < ApplicationSystemTestCase
     visit personal_whish_lists_url
     click_on "Edit", match: :first
 
+    fill_in "Name", with: @personal_whish_list.name
     click_on "Update Personal whish list"
 
     assert_text "Personal whish list was successfully updated"

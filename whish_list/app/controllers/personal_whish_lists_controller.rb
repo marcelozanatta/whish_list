@@ -69,6 +69,6 @@ class PersonalWhishListsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def personal_whish_list_params
-      params.fetch(:personal_whish_list, {})
+      params.require(:personal_whish_list).permit(:name)
     end
 end
