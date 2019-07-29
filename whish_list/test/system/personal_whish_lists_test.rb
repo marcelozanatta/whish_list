@@ -8,6 +8,7 @@ class PersonalWhishListsTest < ApplicationSystemTestCase
   test "visiting the index" do
     visit personal_whish_lists_url
     assert_selector "h1", text: "Personal Whish Lists"
+    assert_selector "h3", text: "Produtos"
   end
 
   test "creating a Personal whish list" do

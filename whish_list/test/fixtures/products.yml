@@ -2,12 +2,12 @@
 
 one:
   id: 1
-  name: MyString
+  name: Product 1
   price: 9.99
   category_id: 1
 
 two:
-  id: 1
-  name: MyString
-  price: 9.99
+  id: 2
+  name: Product 2
+  price: 234.354
   category_id: 1

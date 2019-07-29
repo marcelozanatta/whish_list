@@ -17,7 +17,7 @@ class ProductPersonalWhishListsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create product_personal_whish_list" do
     assert_difference('ProductPersonalWhishList.count') do
-      post product_personal_whish_lists_url, params: { product_personal_whish_list: { Product: @product_personal_whish_list.Product, personal_wish_list: @product_personal_whish_list.personal_wish_list, product: @product_personal_whish_list.product } }
+      post product_personal_whish_lists_url, params: { product_personal_whish_list: { Product: @product_personal_whish_list.Product, personal_wish_list: @product_personal_whish_list.personal_wish_list_id, product: @product_personal_whish_list.product } }
     end
 
     assert_redirected_to product_personal_whish_list_url(ProductPersonalWhishList.last)
