@@ -4,7 +4,10 @@ class ProductPersonalWhishListsController < ApplicationController
   # GET /product_personal_whish_lists
   # GET /product_personal_whish_lists.json
   def index
-    @product_personal_whish_lists = ProductPersonalWhishList.all
+    p params[:personal_whish_list]
+    @categories = Category.all
+    @products = Product.all
+    @selected_products = PersonalWhishList.find(params[:personal_whish_list]).products
   end
 
   # GET /product_personal_whish_lists/1
