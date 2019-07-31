@@ -64,6 +64,12 @@ class ProductPersonalWhishListsController < ApplicationController
     end
   end
 
+  #Metodo de busca para o produto
+  def product_search(name){
+    @products = Product.where(:name = name)
+    render :json => @products
+  }
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_product_personal_whish_list
@@ -74,4 +80,5 @@ class ProductPersonalWhishListsController < ApplicationController
     def product_personal_whish_list_params
       params.require(:product_personal_whish_list).permit(:product, :personal_wish_list, :quantity)
     end
+
 end
