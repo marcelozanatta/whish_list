@@ -1,16 +1,16 @@
 class Product < ApplicationRecord
   belongs_to :category
 
-  def get_category_ids(category_id, ids)
+  def self.get_category_ids(category_id, ids)
+    ids.push(category_id)
     category = Category.find(category_id)
-    ids.push(category.id)
     category.childrens.each do |child|
-        nodes.push(generate_category_tree(child))
+      ids.push(get_category_ids(child.id))
     end
+    return ids
   end
 
-  def get_by_category(category_id)
-    Product.where(category_id in get_category_ids(category_id,[]))
+  def self.get_by_category(category_id)
+    return Product.where(category_id: get_category_ids(category_id, []))
   end
-
 end

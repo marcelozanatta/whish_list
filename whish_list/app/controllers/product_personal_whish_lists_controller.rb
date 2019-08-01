@@ -70,6 +70,11 @@ class ProductPersonalWhishListsController < ApplicationController
     render :json => products
   end
 
+  def get_product_by_category
+    products = Product.get_by_category(params[:id])
+    render :json => products
+  end
+
   def get_categories()
     tree = []
     categories = Category.where(parent_id: nil)
@@ -94,7 +99,7 @@ class ProductPersonalWhishListsController < ApplicationController
   def generate_category_tree(category)
     node = {
       text: category.name,
-      href: product_personal_whish_list_path(category.id),
+      href: get_product_by_category_product_personal_whish_lists_path(category.id),
     }
 
     nodes = []
