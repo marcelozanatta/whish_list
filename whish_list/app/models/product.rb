@@ -11,6 +11,7 @@ class Product < ApplicationRecord
   end
 
   def self.get_by_category(category_id)
-    return Product.where(category_id: get_category_ids(category_id, []))
+    categories = get_category_ids(category_id, [])
+    return Product.where(category_id: categories)
   end
 end
