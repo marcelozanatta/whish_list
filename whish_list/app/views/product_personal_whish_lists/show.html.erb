@@ -1,19 +1,61 @@
+<% content_for :head do %>
+    <link href="/assets/bootstrap-treeview/bootstrap-treeview.min.css" rel="stylesheet">
+<% end %>
+
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Product:</strong>
-  <%= @product_personal_whish_list.product %>
-</p>
+<h1>Product Personal Whish Lists Show</h1>
+<div id="app">
+{{ message }}
 
-<p>
-  <strong>Personal wish list:</strong>
-  <%= @product_personal_whish_list.personal_wish_list %>
-</p>
+<div id="tree"></div>
 
-<p>
-  <strong>Quantity:</strong>
-  <%= @product_personal_whish_list.quantity %>
-</p>
+<div>
 
-<%= link_to 'Edit', edit_product_personal_whish_list_path(@product_personal_whish_list) %> |
-<%= link_to 'Back', product_personal_whish_lists_path %>
+<br>
+
+<%= link_to 'New Product Personal Whish List', new_product_personal_whish_list_path %>
+
+<% content_for :end_body do %>
+  <script src="/assets/bootstrap-treeview/bootstrap-treeview.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        message: 'Olá Vue!',
+        categories: []
+      },
+      methods: {
+        get_products_by_category: function(url){
+          console.log(url);
+        }
+      },
+      mounted: function(){
+        self = this;
+
+        axios.get('<%= get_categories_product_personal_whish_lists_url %>')
+          .then(function (response) {
+            console.log(response);
+            self = response.data
+            $('#tree').treeview({
+              data: response.data,
+              onNodeSelected: function(event, data) {
+                console.log(data);
+                app.get_products_by_category(data.href);
+              } 
+            });
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
+          .finally(function () {
+          });
+      }
+    })
+
+  </script>
+
+<% end %>

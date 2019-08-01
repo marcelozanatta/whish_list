@@ -1,3 +1,7 @@
+<% content_for :head do %>
+    <link href="assets/bootstrap-treeview.min.css" rel="stylesheet">
+<% end %>
+
 <p id="notice"><%= notice %></p>
 
 <h1>Product Personal Whish Lists</h1>
@@ -17,3 +21,7 @@
 <br>
 
 <%= link_to 'New Product Personal Whish List', new_product_personal_whish_list_path %>
+
+<% content_for :end_body do %>
+  <script src="assets/bootstrap-treeview.min.js"></script>
+<% end %>
