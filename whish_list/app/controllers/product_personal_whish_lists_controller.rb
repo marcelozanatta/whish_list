@@ -9,10 +9,7 @@ class ProductPersonalWhishListsController < ApplicationController
   # GET /product_personal_whish_lists/1
   # GET /product_personal_whish_lists/1.json
   def show
-    p params[:personal_whish_list]
-    @categories = Category.all
-    @products = Product.all
-    @selected_products = PersonalWhishList.find(params[:id]).products
+    @personal_whish_list = PersonalWhishList.find(params[:id])
   end
 
   # GET /product_personal_whish_lists/new
@@ -64,24 +61,30 @@ class ProductPersonalWhishListsController < ApplicationController
     end
   end
 
-  #Metodo de busca para o produto
-  def product_search(name)
-    products = Product.where(name: name)
-    render :json => products
+  def get_categories()
+    tree = []
+    categories = Category.all
+    tree = generate_categories_tree(categories)
+    render :json => tree
   end
 
   def get_product_by_category
+    #byebug
     products = Product.get_by_category(params[:id])
-    render :json => products
+    pagined_products = products.page(params[:page])
+    render :json => { products: pagined_products, total_items: products.count, total_pages: pagined_products.total_pages, current_page: pagined_products.current_page }
   end
 
-  def get_categories()
-    tree = []
-    categories = Category.where(parent_id: nil)
-    categories.each do |category|
-      tree.push(generate_category_tree(category))
+  #Metodo de busca para o produto
+  def product_search()
+    product = nil
+    if (params[:category] != nil and params[:category].to_i > 0)
+      products = Product.get_by_category(params[:category]).where("lower(name) like ?", "%#{params[:name].to_s.downcase}%")
+    else
+      products = Product.where("lower(name) like ?", "%#{params[:name].to_s.downcase}%")
     end
-    render :json => tree
+    pagined_products = products.page(1)
+    render :json => { products: pagined_products, total_items: products.count, total_pages: pagined_products.total_pages, current_page: pagined_products.current_page }
   end
 
   private
@@ -96,22 +99,46 @@ class ProductPersonalWhishListsController < ApplicationController
     params.require(:product_personal_whish_list).permit(:product, :personal_wish_list, :quantity)
   end
 
-  def generate_category_tree(category)
-    node = {
-      text: category.name,
-      href: get_product_by_category_product_personal_whish_lists_path(category.id),
-    }
+  # def generate_category_tree(category)
+  #   node = {
+  #     text: category.name,
+  #     href: get_product_by_category_product_personal_whish_lists_path(category.id),
+  #   }
 
-    nodes = []
+  #   nodes = []
 
-    category.childrens.each do |child|
-      nodes.push(generate_category_tree(child))
+  #   category.childrens.each do |child|
+  #     nodes.push(generate_category_tree(child))
+  #   end
+
+  #   if nodes.length > 0
+  #     node[:nodes] = nodes
+  #   end
+
+  #   return node
+  # end
+
+  def generate_categories_tree(categories)
+    tree = []
+
+    categories.each do |category|
+      tree.push(
+        {
+          id: category.id.to_s,
+          parent: category.parent_id ? category.parent_id : "#",
+          text: category.name,
+          #icon: "string" // string for custom
+          state: {
+            opened: true,  # is the node open
+          },
+        #li_attr     : {}  // attributes for the generated LI node
+        #a_attr      : {}  // attributes for the generated A node
+        }
+      )
     end
 
-    if nodes.length > 0
-      node[:nodes] = nodes
-    end
+    p tree
 
-    return node
+    return tree
   end
 end

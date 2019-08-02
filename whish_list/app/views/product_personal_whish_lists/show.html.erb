@@ -1,62 +1,116 @@
 <% content_for :head do %>
-    <link href="/assets/bootstrap-treeview/bootstrap-treeview.min.css" rel="stylesheet">
+    <%# <link href="/assets/bootstrap-treeview/bootstrap-treeview.min.css" rel="stylesheet"> %>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.css" />
+    
 <% end %>
 
 <p id="notice"><%= notice %></p>
 
-<h1>Product Personal Whish Lists Show</h1>
+<h2>Minha lista personalizada - <%= @personal_whish_list.name %></h2>
+<style>
+  .custom-selected:hover {
+     opacity: 0.5;
+     filter: alpha(opacity=50); /* For IE8 and earlier */
+  }
+</style>
 <div id="app">
 
-<div id="tree"></div>
+<!-- Page Content -->
+<div class=container-fluid>
+ 
+  <h3>Categorias</h3>
+    
+  <div class="row">
+    <div id="category-tree"></div>
+  </div>
 
-<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-  <thead>
-    <tr>
-      <th>Nome</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
+  <%= render :partial => 'products/index'%>
+ 
+  <card-products
+    v-bind:category_selected="categorySelected"
+    v-bind:products="products">
+  <card-products>
 
-  <tbody>
-      <tr v-for="product in products">
-        <td>{{product.name}}</td>
-      </tr>
-  </tbody>
-</table>
-<div>
+  <div v-show="products && products.length > 0" class="row justify-content-center">
+    <paginate
+      :page-count="pagination.totalPages"
+      :page-range="pagination.pageRarge"
+      :click-handler="clickCallback"
+      :prev-text="'Anterior'"
+      :next-text="'Próximo'"
+      :container-class="'pagination'"
+      :page-class="'page-item'">
+    </paginate>
+  </div>
 
-<br>
-
-<%= link_to 'New Product Personal Whish List', new_product_personal_whish_list_path %>
+</div>
+<!-- /.container -->
 
 <% content_for :end_body do %>
-  <script src="/assets/bootstrap-treeview/bootstrap-treeview.min.js"></script>
+  <%# <script src="/assets/bootstrap-treeview/bootstrap-treeview.min.js"></script> %>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://unpkg.com/vuejs-paginate@0.9.0"></script>
 
   <script>
+    Vue.component('paginate', VuejsPaginate)
+
     var app = new Vue({
       el: '#app',
-      data: {
-        message: 'Olá Vue!',
+      data: { 
+        pagination: {
+          totalPages: 5,
+          pageRarge: 12,
+        },
+        categorySelected: {text: ""},
+        productNameSearch: null,
+        currentPage: 1,
         categories: [],
         products: []
       },
       methods: {
+        clickCallback: function(page) {
+          console.log(page)
+          this.currentPage = page;
+          this.productSearch();
+        },
 
-        get_products_by_category: function(url){
+        getProductsByCategory: function(category_id){
           self = this;
 
-          axios.get(url)
+          //TODO Limpar campo de pesquisa
+          console.log("getProductsByCategory: "+ category_id);
+          axios.get('/product_personal_whish_lists/get_product_by_category/' + category_id + '?page=' + this.currentPage )
           .then(function (response) {
-            console.log(response);
-            self.products = response.data
+            self.products = response.data.products;
+            self.pagination.totalPages = response.data.total_pages;
+
           })
           .catch(function (error) {
             console.log(error);
           })
           .finally(function () {
           });
+        },
+
+        productSearch: function(){
+          axios.get('<%= product_search_product_personal_whish_lists_url %>?category=' + this.categorySelected.id + '&name=' + this.productNameSearch )
+          .then(function (response) {
+            self.products = response.data.products;
+            self.pagination.totalPages = response.data.total_pages;
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
+          .finally(function () {
+          });
+        },
+       
+        formatPrice(value) {
+            let val = (value/1).toFixed(2).replace('.', ',')
+            return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
         }
 
       },
@@ -67,22 +121,33 @@
           .then(function (response) {
             console.log(response);
             self.categories = response.data
-            $('#tree').treeview({
-              data: response.data,
-              onNodeSelected: function(event, data) {
-                console.log(data);
-                app.get_products_by_category(data.href);
-              } 
+
+          $('#category-tree').jstree(
+            { 'core' : { 'data': response.data}
+          });
+
+           $('#category-tree').on("changed.jstree", function (e, data) {
+              console.log(data.node);
+              app.categorySelected = data.node;
+              app.getProductsByCategory(data.node.id);
             });
+
           })
           .catch(function (error) {
             console.log(error);
           })
           .finally(function () {
           });
+      },
+      watch: {
+        productNameSearch: function(val){
+          this.productSearch();
+        }
       }
     })
 
   </script>
+
+  
 
 <% end %>

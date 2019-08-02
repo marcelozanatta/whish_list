@@ -1,17 +1,10 @@
 class Product < ApplicationRecord
   belongs_to :category
 
-  def self.get_category_ids(category_id, ids)
-    ids.push(category_id)
-    category = Category.find(category_id)
-    category.childrens.each do |child|
-      ids.push(get_category_ids(child.id))
-    end
-    return ids
-  end
+  paginates_per 12
 
   def self.get_by_category(category_id)
-    categories = get_category_ids(category_id, [])
+    categories = Category.get_category_tree_ids(category_id, [])
     return Product.where(category_id: categories)
   end
 end
