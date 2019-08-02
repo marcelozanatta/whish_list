@@ -1,50 +1,60 @@
+<!-- Page Heading -->
 
-  <!-- Page Heading -->
-  
-  <h3 class="my-4">Produtos
-    <small v-if="categorySelected !== undefined">{{categorySelected.text}}</small>
-  </h3>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h3 class="my-4">Produtos
+            <small v-if="categorySelected !== undefined">{{categorySelected.text}}</small>
+        </h3>
 
-<div class="row justify-content-end mb-5 ml-5">
-    <div class="input-group col-md-4">
-        <form>
-            <div class="input-group">
-                <span class="input-group-addon"><i class="fas fa-search"></i></span>
-                <input v-model="productNameSearch" type="text" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
+    </div>
+    <div class="card-body">
+        <div class="row justify-content-end mb-5 mr-1">
+            <div class="input-group col-xl-4 col-lg-4 col-md-4 col-sm-5 col-11">
+                <form>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fas fa-search"></i></span>
+                        <input v-model="productNameSearch" type="text" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
+
+
+        <div class="row">
+
+            <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 mb-4 custom-selected" v-for="(product, index) in products">
+                <a href="javascript:void(0)" v-on:click="addItemToList(product)">
+                    <div class="card h-100">
+                        <img class="card-img-top" src="http://placehold.it/700x400" alt="">
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                {{product.name}}
+                            </h4>
+                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra euismod odio, gravida pellentesque urna varius vitae.</p>
+                            <p class="card-text">R$ {{ formatPrice(product.price) }}</p>
+
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+        </div>
     </div>
 </div>
 
 
-  <div class="row">
-  
-    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-4 custom-selected" v-for="(product, index) in products">
-      <div class="card h-100">
-        <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-        <div class="card-body">
-          <h4 class="card-title">
-            <a href="#">{{product.name}}</a>
-          </h4>
-          <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra euismod odio, gravida pellentesque urna varius vitae.</p>
-          <p class="card-text">R$ {{ formatPrice(product.price) }}</p>
 
-        </div>
-      </div>
-    </div>
-
-  </div>
-  <!-- /.row -->
+<!-- /.row -->
 
 <% content_for :end_body do %>
     <script>
         Vue.component('card-products', {
-            props: ['category_selected','products'],
+            props: ['category_selected', 'products'],
             methods: {
-            
+
             },
-            
+
         })
     </script>
 
-<% end %>
+    <% end %>

@@ -83,7 +83,7 @@ class ProductPersonalWhishListsController < ApplicationController
     else
       products = Product.where("lower(name) like ?", "%#{params[:name].to_s.downcase}%")
     end
-    pagined_products = products.page(1)
+    pagined_products = products.page(params[:page])
     render :json => { products: pagined_products, total_items: products.count, total_pages: pagined_products.total_pages, current_page: pagined_products.current_page }
   end
 
