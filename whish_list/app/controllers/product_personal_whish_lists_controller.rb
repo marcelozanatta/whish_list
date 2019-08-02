@@ -1,5 +1,5 @@
 class ProductPersonalWhishListsController < ApplicationController
-  before_action :set_product_personal_whish_list, only: [:edit, :update, :destroy]
+  # before_action :set_product_personal_whish_list, only: [:edit, :update, :destroy]
 
   # GET /product_personal_whish_lists
   # GET /product_personal_whish_lists.json
@@ -12,53 +12,29 @@ class ProductPersonalWhishListsController < ApplicationController
     @personal_whish_list = PersonalWhishList.find(params[:id])
   end
 
-  # GET /product_personal_whish_lists/new
-  def new
-    @product_personal_whish_list = ProductPersonalWhishList.new
-  end
-
-  # GET /product_personal_whish_lists/1/edit
-  def edit
-  end
-
   # POST /product_personal_whish_lists
   # POST /product_personal_whish_lists.json
   def create
-    @product_personal_whish_list = ProductPersonalWhishList.new(product_personal_whish_list_params)
+    @product_personal_whish_list = ProductPersonalWhishList.where(product_id: params[:product_id], personal_whish_list_id: params[:personal_whish_list_id])
 
-    respond_to do |format|
-      if @product_personal_whish_list.save
-        format.html { redirect_to @product_personal_whish_list, notice: "Product personal whish list was successfully created." }
-        format.json { render :show, status: :created, location: @product_personal_whish_list }
-      else
-        format.html { render :new }
-        format.json { render json: @product_personal_whish_list.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # PATCH/PUT /product_personal_whish_lists/1
-  # PATCH/PUT /product_personal_whish_lists/1.json
-  def update
-    respond_to do |format|
+    if (@product_personal_whish_list && params[:quantity] == 0)
+      # Deleta registro
+      @product_personal_whish_list.first.destroy
+      return render :json => { message: "Excluido com sucesso" }
+    elsif (@product_personal_whish_list and @product_personal_whish_list.count > 0)
+      # Atualiza
       if @product_personal_whish_list.update(product_personal_whish_list_params)
-        format.html { redirect_to @product_personal_whish_list, notice: "Product personal whish list was successfully updated." }
-        format.json { render :show, status: :ok, location: @product_personal_whish_list }
-      else
-        format.html { render :edit }
-        format.json { render json: @product_personal_whish_list.errors, status: :unprocessable_entity }
+        return render :json => { message: "Atualizado" }
+      end
+    else
+      # Cria novo registro
+      @product_personal_whish_list = ProductPersonalWhishList.new(product_personal_whish_list_params)
+      if @product_personal_whish_list.save
+        return render :json => { message: "Criado com sucesso" }
       end
     end
-  end
 
-  # DELETE /product_personal_whish_lists/1
-  # DELETE /product_personal_whish_lists/1.json
-  def destroy
-    @product_personal_whish_list.destroy
-    respond_to do |format|
-      format.html { redirect_to product_personal_whish_lists_url, notice: "Product personal whish list was successfully destroyed." }
-      format.json { head :no_content }
-    end
+    return render :json => { message: "Erro ao criar" }
   end
 
   def get_categories()
@@ -89,34 +65,13 @@ class ProductPersonalWhishListsController < ApplicationController
 
   private
 
-  # Use callbacks to share common setup or constraints between actions.
   def set_product_personal_whish_list
     @product_personal_whish_list = ProductPersonalWhishList.find(params[:id])
   end
 
-  # Never trust parameters from the scary internet, only allow the white list through.
   def product_personal_whish_list_params
-    params.require(:product_personal_whish_list).permit(:product, :personal_wish_list, :quantity)
+    params.require(:product_personal_whish_list).permit(:product_id, :personal_whish_list_id, :quantity)
   end
-
-  # def generate_category_tree(category)
-  #   node = {
-  #     text: category.name,
-  #     href: get_product_by_category_product_personal_whish_lists_path(category.id),
-  #   }
-
-  #   nodes = []
-
-  #   category.childrens.each do |child|
-  #     nodes.push(generate_category_tree(child))
-  #   end
-
-  #   if nodes.length > 0
-  #     node[:nodes] = nodes
-  #   end
-
-  #   return node
-  # end
 
   def generate_categories_tree(categories)
     tree = []
@@ -127,18 +82,12 @@ class ProductPersonalWhishListsController < ApplicationController
           id: category.id.to_s,
           parent: category.parent_id ? category.parent_id : "#",
           text: category.name,
-          #icon: "string" // string for custom
           state: {
             opened: true,  # is the node open
           },
-        #li_attr     : {}  // attributes for the generated LI node
-        #a_attr      : {}  // attributes for the generated A node
         }
       )
     end
-
-    p tree
-
     return tree
   end
 end

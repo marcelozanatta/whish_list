@@ -1,54 +1,52 @@
 <% content_for :head do %>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
-<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.css" />
-
 <% end %>
 
-            <p id="notice">
-                <%= notice %>
-            </p>
+<p id="notice">
+    <%= notice %>
+</p>
 
-            <h2>Minha lista personalizada -
-                <%= @personal_whish_list.name %>
-            </h2>
-            <style>
-                .custom-selected:hover {
-                    opacity: 0.5;
-                    filter: alpha(opacity=50);
-                    /* For IE8 and earlier */
-                }
-            </style>
-            <div id="app">
+<h2>Minha lista personalizada -
+    <%= @personal_whish_list.name %>
+</h2>
+<style>
+    .custom-selected:hover {
+        opacity: 0.5;
+        filter: alpha(opacity=50);
+        /* For IE8 and earlier */
+    }
+</style>
+<div id="app">
+<%= hidden_field_tag('personal_whish_list_id', @personal_whish_list.id) %>
+    <!-- Page Content -->
+    <div class=container-fluid>
 
-                <!-- Page Content -->
-                <div class=container-fluid>
 
-
-                    <div class="card shadow mb-4">
-                       <div class="card-header py-3">
-                            <h3 class="my-4">Categorias </h3>
-                        </div>
-                        <!-- Card Content - Collapse -->
-                        <div class="collapse show" id="collapseCardExample">
-                            <div class="card-body">
-                                <div id="category-tree"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <%= render :partial => 'products/index'%>
-
-                        <card-products v-bind:category_selected="categorySelected" v-bind:products="products">
-                            <card-products>
-
-                                <div v-show="products && products.length > 0" class="row justify-content-center">
-                                    <paginate :page-count="pagination.totalPages" :page-range="pagination.pageRarge" :click-handler="clickCallback" :prev-text="'Anterior'" :next-text="'Próximo'" :container-class="'pagination'" :page-class="'page-item'">
-                                    </paginate>
-                                </div>
-
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h5 class="my-2">Categorias </h5>
+            </div>
+            <!-- Card Content - Collapse -->
+            <div class="collapse show" id="collapseCardExample">
+                <div class="card-body">
+                    <div id="category-tree"></div>
                 </div>
-                <!-- /.container -->
+            </div>
+        </div>
 
+    <%= render :partial => 'products/index'%>
+
+    <card-products v-bind:category_selected="categorySelected" v-bind:products="products">
+    <card-products>
+
+    <div v-show="products && products.length > 0" class="row justify-content-center">
+        <paginate :page-count="pagination.totalPages" :page-range="pagination.pageRarge" :click-handler="clickCallback" :prev-text="'Anterior'" :next-text="'Próximo'" :container-class="'pagination'" :page-class="'page-item'">
+        </paginate>
+    </div>
+
+</div>
+
+                
 <% content_for :end_body do %>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
