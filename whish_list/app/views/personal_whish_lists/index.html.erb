@@ -4,12 +4,10 @@
 
 <p id="notice"><%= notice %></p>
 
-<h3>Minhas Listas</h3>
-
  <!-- DataTales Example -->
           <div class="card shadow mb-4">
             <div class="card-header py-3">
-              <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+              <h3 class="m-0 font-weight-bold text-primary">Minhas Listas</h3>
             </div>
             <div class="card-body">
               <div class="table-responsive">
@@ -28,7 +26,7 @@
       <tr>
         <td><%= personal_whish_list.name %></td>
         <td><%= personal_whish_list.total_products %></td>
-        <td>R$ <%= personal_whish_list.total_value %></td>
+        <td><%= number_to_currency(personal_whish_list.total_value, unit: "R$ ", separator: ",", delimiter: "") %></td>
         <td>
         <a class="mr-3" data-toggle="tooltip" data-placement="top" title="Editar Lista" href="<%=product_personal_whish_list_path(personal_whish_list.id)%>"> <i class="fas fa-clipboard-list"></i></a>
         <a class="mr-3" data-toggle="tooltip" data-placement="top" title="Editar dados da lista" href="<%=edit_personal_whish_list_path(personal_whish_list)%>"><i class="fas fa-edit"></i></a>
@@ -42,8 +40,6 @@
           </div>
 
 <br>
-
-<%= link_to 'New Personal Whish List', new_personal_whish_list_path %>
 
 <% content_for :end_body do %>
   <script src="assets/datatables/jquery.dataTables.min.js"></script>

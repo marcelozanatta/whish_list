@@ -33,7 +33,7 @@
     <card-products>
 
     <div v-show="products && products.length > 0" class="row justify-content-center">
-        <paginate :page-count="pagination.totalPages" :page-range="pagination.pageRarge" :click-handler="clickCallback" :prev-text="'Anterior'" :next-text="'Próximo'" :container-class="'pagination'" :page-class="'page-item'">
+        <paginate :page-count="pagination.totalPages" :page-range="pagination.pageRarge" :click-handler="clickCallback" :prev-text="'Anterior'" :next-text="'Próximo'" :container-class="'pagination'" :page-class="'page-link'">
         </paginate>
     </div>
 
