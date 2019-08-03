@@ -9,18 +9,11 @@
 <h2>Minha lista personalizada -
     <%= @personal_whish_list.name %>
 </h2>
-<style>
-    .custom-selected:hover {
-        opacity: 0.5;
-        filter: alpha(opacity=50);
-        /* For IE8 and earlier */
-    }
-</style>
+
 <div id="app">
 <%= hidden_field_tag('personal_whish_list_id', @personal_whish_list.id) %>
     <!-- Page Content -->
     <div class=container-fluid>
-
 
         <div class="card shadow mb-4">
             <div class="card-header py-3">

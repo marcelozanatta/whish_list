@@ -5,6 +5,9 @@ class PersonalWhishListsController < ApplicationController
   # GET /personal_whish_lists.json
   def index
     @personal_whish_lists = PersonalWhishList.all
+      .joins("join product_personal_whish_lists on product_personal_whish_lists.personal_whish_list_id = personal_whish_lists.id")
+      .joins("join products on products.id = product_personal_whish_lists.product_id")
+      .select("personal_whish_lists.id,personal_whish_lists.name,count(product_personal_whish_lists.quantity) as total_products, sum(products.price * product_personal_whish_lists.quantity) as total_value")
   end
 
   # GET /personal_whish_lists/1
@@ -28,7 +31,7 @@ class PersonalWhishListsController < ApplicationController
 
     respond_to do |format|
       if @personal_whish_list.save
-        format.html { redirect_to @personal_whish_list, notice: 'Personal whish list was successfully created.' }
+        format.html { redirect_to @personal_whish_list, notice: "Personal whish list was successfully created." }
         format.json { render :show, status: :created, location: @personal_whish_list }
       else
         format.html { render :new }
@@ -42,7 +45,7 @@ class PersonalWhishListsController < ApplicationController
   def update
     respond_to do |format|
       if @personal_whish_list.update(personal_whish_list_params)
-        format.html { redirect_to @personal_whish_list, notice: 'Personal whish list was successfully updated.' }
+        format.html { redirect_to @personal_whish_list, notice: "Personal whish list was successfully updated." }
         format.json { render :show, status: :ok, location: @personal_whish_list }
       else
         format.html { render :edit }
@@ -56,19 +59,20 @@ class PersonalWhishListsController < ApplicationController
   def destroy
     @personal_whish_list.destroy
     respond_to do |format|
-      format.html { redirect_to personal_whish_lists_url, notice: 'Personal whish list was successfully destroyed.' }
+      format.html { redirect_to personal_whish_lists_url, notice: "Personal whish list was successfully destroyed." }
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_personal_whish_list
-      @personal_whish_list = PersonalWhishList.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def personal_whish_list_params
-      params.require(:personal_whish_list).permit(:name)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_personal_whish_list
+    @personal_whish_list = PersonalWhishList.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def personal_whish_list_params
+    params.require(:personal_whish_list).permit(:name)
+  end
 end

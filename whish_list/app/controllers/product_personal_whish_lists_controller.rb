@@ -45,7 +45,6 @@ class ProductPersonalWhishListsController < ApplicationController
   end
 
   def get_product_by_category
-    #byebug
     products = Product.get_by_category(params[:id])
     pagined_products = products.page(params[:page])
     render :json => { products: pagined_products, total_items: products.count, total_pages: pagined_products.total_pages, current_page: pagined_products.current_page }
